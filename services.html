@@ -818,7 +818,19 @@
       #sp-how-it-works { padding: 60px 20px; }
       .hub-section { padding: 70px 20px; }
     }
-  </style>
+  
+    /* Unified process steps: boxed style, click to expand (text mirrors the HowTo schema) */
+    .psteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: pstep; }
+    .pstep { background: #ffffff; border: 1px solid rgba(31,39,46,0.12); border-left: 3px solid #BF1E2E; border-radius: 2px; transition: background 0.2s; }
+    .pstep:hover { background: #F8F8F8; }
+    .pstep-q { counter-increment: pstep; display: flex; align-items: center; gap: 18px; padding: 16px 22px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600; color: #1F272E; }
+    .pstep-q::before { content: counter(pstep, decimal-leading-zero); font-family: 'Michroma', sans-serif; font-size: 13px; color: #BF1E2E; }
+    .pstep-q:focus-visible { outline: 2px solid #BF1E2E; outline-offset: 2px; }
+    .pstep-toggle { margin-left: auto; font-size: 19px; font-weight: 600; color: #BF1E2E; line-height: 1; transition: transform 0.25s ease; }
+    .pstep.open .pstep-toggle { transform: rotate(45deg); }
+    .pstep-desc { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease; font-size: 0.87rem; line-height: 1.7; color: #3a4a5e; padding: 0 22px; }
+    .pstep.open .pstep-desc { max-height: 220px; opacity: 1; padding: 0 22px 16px; }
+</style>
 </head>
 <body>
 
@@ -1175,33 +1187,28 @@
         </div>
         <div class="sp-hiw-content">
           <p class="sp-hiw-text">Whether you need a single commercial electrician or a full manpower staffing crew for a large commercial construction project, our process is straightforward, built to get the right tradesmen on your site as fast as possible.</p>
-          <div class="sp-step-list">
-            <div class="sp-step">
-              <span class="sp-step-num">01</span>
-              <span class="sp-step-label">Tell Us What You Need</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">02</span>
-              <span class="sp-step-label">We Identify &amp; Qualify Tradesmen</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">03</span>
-              <span class="sp-step-label">Review &amp; Confirm Placement</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">04</span>
-              <span class="sp-step-label">Crew Onsite / Project Launch</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">05</span>
-              <span class="sp-step-label">Ongoing Support &amp; Closeout</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-          </div>
+          <ul class="psteps">
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-1"><span class="pstep-label">Tell Us What You Need</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-1">Contact Surge Power Services with your project details: trade discipline, crew size, location, timeline, and wage range. The more detail you provide, the faster we can qualify the right tradespeople.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-2"><span class="pstep-label">We Identify &amp; Qualify Tradesmen</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-2">Our team sources from our network of vetted commercial electricians, industrial electricians, HVAC technicians, plumbers, and laborers, screening for experience, credentials, and fit with your project requirements.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-3"><span class="pstep-label">Review &amp; Confirm Placement</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-3">We present qualified candidates for your review. You confirm the placement, engagement model (contract, temp-to-perm, or direct hire), and start date.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-4"><span class="pstep-label">Crew Onsite / Project Launch</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-4">Your tradesman or crew arrives on site ready to work: verified, credentialed, and briefed on your project scope and expectations.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-5"><span class="pstep-label">Ongoing Support &amp; Closeout</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-5">Surge Power stays engaged throughout the project. We handle any issues, manage replacements if needed, and ensure a clean closeout when the work is done.</div>
+          </li>
+        </ul>
         </div>
       </div>
     </div>

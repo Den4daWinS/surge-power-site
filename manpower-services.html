@@ -827,7 +827,19 @@
       .sp-testi-quote { position: static; width: 100%; margin-top: -20px; }
       .sp-faq-trigger { padding: 18px 16px; font-size: 14px; }
     }
-  </style>
+  
+    /* Unified process steps: boxed style, click to expand (text mirrors the HowTo schema) */
+    .psteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: pstep; }
+    .pstep { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-left: 3px solid #BF1E2E; border-radius: 2px; transition: background 0.2s; }
+    .pstep:hover { background: rgba(255,255,255,0.08); }
+    .pstep-q { counter-increment: pstep; display: flex; align-items: center; gap: 18px; padding: 16px 22px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600; color: #ffffff; }
+    .pstep-q::before { content: counter(pstep, decimal-leading-zero); font-family: 'Michroma', sans-serif; font-size: 13px; color: #F2646E; }
+    .pstep-q:focus-visible { outline: 2px solid #F2646E; outline-offset: 2px; }
+    .pstep-toggle { margin-left: auto; font-size: 19px; font-weight: 600; color: #F2646E; line-height: 1; transition: transform 0.25s ease; }
+    .pstep.open .pstep-toggle { transform: rotate(45deg); }
+    .pstep-desc { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease; font-size: 0.87rem; line-height: 1.7; color: rgba(255,255,255,0.78); padding: 0 22px; }
+    .pstep.open .pstep-desc { max-height: 220px; opacity: 1; padding: 0 22px 16px; }
+</style>
 </head>
 <body>
 
@@ -995,28 +1007,24 @@
         </div>
         <div class="sp-hiw-content">
           <p class="sp-hiw-text">Getting staffed through Surge Power is straightforward. We've built our process around speed and transparency, from your first outreach to workers on-site, you stay informed at every step and we handle the rest.</p>
-          <ol class="sp-hiw-steps">
-            <li class="sp-hiw-step">
-              <span class="sp-step-num">01</span>
-              <div class="sp-step-divider"></div>
-              <span class="sp-step-label">Submit your staffing request</span>
-            </li>
-            <li class="sp-hiw-step">
-              <span class="sp-step-num">02</span>
-              <div class="sp-step-divider"></div>
-              <span class="sp-step-label">Candidate screening &amp; matching</span>
-            </li>
-            <li class="sp-hiw-step">
-              <span class="sp-step-num">03</span>
-              <div class="sp-step-divider"></div>
-              <span class="sp-step-label">Crew placement &amp; site onboarding</span>
-            </li>
-            <li class="sp-hiw-step">
-              <span class="sp-step-num">04</span>
-              <div class="sp-step-divider"></div>
-              <span class="sp-step-label">Ongoing support &amp; performance follow-up</span>
-            </li>
-          </ol>
+          <ul class="psteps">
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-1"><span class="pstep-label">Submit your staffing request</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-1">Contact Surge Power with your trade requirements, headcount, location, timeline, and wage rate. The more detail you provide, the faster we can match the right candidates.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-2"><span class="pstep-label">Candidate screening &amp; matching</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-2">We source from our network of vetted tradespeople, screening for work history, credentials, safety certifications, and fit with your project requirements.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-3"><span class="pstep-label">Crew placement &amp; site onboarding</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-3">Confirmed workers are placed on site, W-2 onboarded through Surge Power, and ready to work from day one.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-4"><span class="pstep-label">Ongoing support &amp; performance follow-up</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-4">Surge Power stays engaged throughout the placement. We handle any issues, manage replacements if needed, and scale the crew up or down as your project evolves.</div>
+          </li>
+        </ul>
         </div>
       </div>
     </div>

@@ -817,7 +817,19 @@
       .sp-testi-quote { position: static; width: 100%; margin-top: -20px; }
       .sp-faq-trigger { padding: 18px 16px; font-size: 14px; }
     }
-  </style>
+  
+    /* Unified process steps: boxed style, click to expand (text mirrors the HowTo schema) */
+    .psteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: pstep; }
+    .pstep { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-left: 3px solid #BF1E2E; border-radius: 2px; transition: background 0.2s; }
+    .pstep:hover { background: rgba(255,255,255,0.08); }
+    .pstep-q { counter-increment: pstep; display: flex; align-items: center; gap: 18px; padding: 16px 22px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600; color: #ffffff; }
+    .pstep-q::before { content: counter(pstep, decimal-leading-zero); font-family: 'Michroma', sans-serif; font-size: 13px; color: #F2646E; }
+    .pstep-q:focus-visible { outline: 2px solid #F2646E; outline-offset: 2px; }
+    .pstep-toggle { margin-left: auto; font-size: 19px; font-weight: 600; color: #F2646E; line-height: 1; transition: transform 0.25s ease; }
+    .pstep.open .pstep-toggle { transform: rotate(45deg); }
+    .pstep-desc { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease; font-size: 0.87rem; line-height: 1.7; color: rgba(255,255,255,0.78); padding: 0 22px; }
+    .pstep.open .pstep-desc { max-height: 220px; opacity: 1; padding: 0 22px 16px; }
+</style>
 </head>
 <body>
 
@@ -1136,28 +1148,24 @@
         </div>
         <div class="sp-hiw-content">
           <p class="sp-hiw-text">Working with us is simple and transparent. We follow a clear step-by-step process, from your request to final closeout, so you always know what's happening and what comes next.</p>
-          <div class="sp-step-list">
-            <div class="sp-step">
-              <span class="sp-step-num">01</span>
-              <span class="sp-step-label">Request / Brief</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">02</span>
-              <span class="sp-step-label">Estimate &amp; Schedule</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">03</span>
-              <span class="sp-step-label">Crew Onsite / Execution</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-            <div class="sp-step">
-              <span class="sp-step-num">04</span>
-              <span class="sp-step-label">Closeout / Reporting</span>
-              <span class="sp-step-arrow">→</span>
-            </div>
-          </div>
+          <ul class="psteps">
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-1"><span class="pstep-label">Request / Brief</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-1">Contact Surge Power with your project details: scope, facility type, timeline, and any existing system information.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-2"><span class="pstep-label">Estimate &amp; Schedule</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-2">We prepare a detailed estimate and schedule the appropriate licensed electricians for your project.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-3"><span class="pstep-label">Crew Onsite / Execution</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-3">Our commercial electricians arrive on site and execute the work to spec, on schedule, and to code.</div>
+          </li>
+          <li class="pstep">
+            <div class="pstep-q" role="button" tabindex="0" aria-expanded="false" aria-controls="pstep-d-4"><span class="pstep-label">Closeout / Reporting</span><span class="pstep-toggle" aria-hidden="true">+</span></div>
+            <div class="pstep-desc" id="pstep-d-4">We complete inspections, documentation, and project closeout so you have a full record of all work performed.</div>
+          </li>
+        </ul>
         </div>
       </div>
     </div>

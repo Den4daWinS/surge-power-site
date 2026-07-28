@@ -446,3 +446,22 @@ function toggleHeroVideo() {
     });
   });
 })();
+
+// ── Expandable "How it Works" steps ────────────────────────────────
+// Unified boxed process steps: click/tap/Enter opens the step and
+// reveals its description (same text the page's HowTo schema carries).
+(function () {
+  var heads = document.querySelectorAll('.pstep-q');
+  if (!heads.length) return;
+  heads.forEach(function (q) {
+    var li = q.parentElement;
+    function toggle() {
+      var open = li.classList.toggle('open');
+      q.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    q.addEventListener('click', toggle);
+    q.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+})();
