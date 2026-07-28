@@ -159,111 +159,148 @@ function toggleHeroVideo() {
   }
 }
 
-// ── Contact Form ──────────────────────────────────────────────────
+// ── Forms: shared validation + accessible errors + AJAX submit ─────
+// One engine for every Netlify form on the site (14 pages). Submit
+// stays enabled; errors are written text tied to the field with
+// aria-invalid/aria-describedby, not just a red border. Success
+// reveals the aria-live confirmation and moves focus to it.
 (function () {
-  var form       = document.getElementById('contact-us-form');
-  var submitBtn  = document.getElementById('contact-submit');
-  var successEl  = document.getElementById('contact-success');
-  if (!form || !submitBtn) return;
+  var forms = document.querySelectorAll('form[data-netlify]');
 
-  var inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-
-  // ── Enable/disable submit based on all fields filled ──
-  function checkAllFilled() {
-    var allFilled = true;
-    inputs.forEach(function (el) {
-      var val = el.value.trim();
-      if (!val) { allFilled = false; return; }
-      if (el.type === 'email' && !isValidEmail(val))  { allFilled = false; return; }
-      if (el.type === 'tel'   && !isValidPhone(val))  { allFilled = false; return; }
-    });
-    submitBtn.disabled = !allFilled;
+  function validators(el) {
+    var v = el.value.trim();
+    if (!v) {
+      return el.tagName === 'SELECT' ? 'Choose an option' : 'This field is required';
+    }
+    if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      return 'Enter a valid email address';
+    }
+    if (el.type === 'tel' && v.replace(/\D/g, '').length !== 10) {
+      return 'Enter a 10 digit phone number';
+    }
+    return '';
   }
 
-  function isValidEmail(val) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  function errorHost(el) {
+    var wrap = el.closest('.contact-select-wrap');
+    return wrap || el;
   }
 
-  function isValidPhone(val) {
-    return /^\d{10}$/.test(val.replace(/\D/g, ''));
-  }
-
-  // Strip non-digits from phone as user types
-  var phoneInput = form.querySelector('input[type="tel"]');
-  if (phoneInput) {
-    phoneInput.addEventListener('input', function () {
-      this.value = this.value.replace(/\D/g, '').slice(0, 10);
-      checkAllFilled();
-    });
-  }
-
-  inputs.forEach(function (el) {
-    el.addEventListener('input', checkAllFilled);
-    el.addEventListener('change', checkAllFilled);
-
-    // Show red border on blur if invalid
-    el.addEventListener('blur', function () {
-      var val = el.value.trim();
-      var invalid = false;
-      if (!val) { invalid = true; }
-      else if (el.type === 'email' && !isValidEmail(val)) { invalid = true; }
-      else if (el.type === 'tel'   && !isValidPhone(val)) { invalid = true; }
-      el.classList.toggle('invalid', invalid);
-    });
-
-    // Remove red border on focus
-    el.addEventListener('focus', function () {
-      el.classList.remove('invalid');
-    });
-  });
-
-  // ── Submit via fetch (Netlify Forms AJAX) ──
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // Final validation pass
-    var hasError = false;
-    inputs.forEach(function (el) {
-      var val = el.value.trim();
-      var invalid = false;
-      if (!val) { invalid = true; }
-      else if (el.type === 'email' && !isValidEmail(val)) { invalid = true; }
-      else if (el.type === 'tel'   && !isValidPhone(val)) { invalid = true; }
-      el.classList.toggle('invalid', invalid);
-      if (invalid) hasError = true;
-    });
-
-    if (hasError) return;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'SENDING...';
-
-    var data = new FormData(form);
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(data).toString()
-    })
-    .then(function (res) {
-      if (res.ok) {
-        form.style.display = 'none';
-        successEl.style.display = 'flex';
-      } else {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'SEND MESSAGE';
-        alert('Something went wrong. Please try again.');
+  function setError(form, el, msg) {
+    var id = (form.id || 'form') + '-err-' + (el.name || 'field');
+    var host = errorHost(el);
+    var err = document.getElementById(id);
+    if (msg) {
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'field-error';
+        err.id = id;
+        host.parentNode.insertBefore(err, host.nextSibling);
       }
-    })
-    .catch(function () {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'SEND MESSAGE';
-      alert('Something went wrong. Please try again.');
+      err.textContent = msg;
+      el.setAttribute('aria-invalid', 'true');
+      el.setAttribute('aria-describedby', id);
+      el.classList.add('invalid');
+    } else {
+      if (err) err.parentNode.removeChild(err);
+      el.removeAttribute('aria-invalid');
+      el.removeAttribute('aria-describedby');
+      el.classList.remove('invalid');
+    }
+  }
+
+  forms.forEach(function (form) {
+    var fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+    var container = form.parentElement;
+    var successEl = container ? container.querySelector('.contact-success') : null;
+    var submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = false;
+
+    form.querySelectorAll('input[type="tel"]').forEach(function (tel) {
+      tel.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+      });
+    });
+
+    fields.forEach(function (el) {
+      el.addEventListener('blur', function () {
+        setError(form, el, validators(el));
+      });
+      el.addEventListener('input', function () {
+        if (el.getAttribute('aria-invalid') && !validators(el)) setError(form, el, '');
+      });
+      el.addEventListener('change', function () {
+        if (el.getAttribute('aria-invalid') && !validators(el)) setError(form, el, '');
+      });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var firstBad = null;
+      fields.forEach(function (el) {
+        var msg = validators(el);
+        setError(form, el, msg);
+        if (msg && !firstBad) firstBad = el;
+      });
+      if (firstBad) {
+        firstBad.focus();
+        return;
+      }
+      var label = submitBtn ? submitBtn.textContent : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'SENDING...';
+      }
+      var data = new FormData(form);
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString()
+      }).then(function (res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          if (successEl) {
+            successEl.style.display = 'flex';
+            successEl.setAttribute('tabindex', '-1');
+            successEl.focus();
+          }
+        } else {
+          throw new Error('bad status');
+        }
+      }).catch(function () {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = label;
+        }
+        alert('Something went wrong. Please try again.');
+      });
     });
   });
+})();
 
-  // Init check
-  checkAllFilled();
+// ── Hero video: pause control + reduced motion ─────────────────────
+(function () {
+  var video = document.getElementById('hero-video');
+  var btn = document.getElementById('hero-media-toggle');
+  if (!video || !btn) return;
+  function setState(playing) {
+    btn.innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+    btn.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
+    btn.setAttribute('aria-pressed', playing ? 'false' : 'true');
+  }
+  btn.addEventListener('click', function () {
+    if (video.paused) {
+      video.play();
+      setState(true);
+    } else {
+      video.pause();
+      setState(false);
+    }
+  });
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.pause();
+    setState(false);
+  }
 })();
 
 (function () {

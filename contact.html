@@ -625,6 +625,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <!-- ═══════════════════════════════════════════════
        NAVIGATION
@@ -718,6 +719,8 @@
     </div>
   </header>
 
+  <main id="main-content">
+
   <!-- ═══════════════════════════════════════════════
        HERO
   ═══════════════════════════════════════════════ -->
@@ -799,7 +802,7 @@
         <p class="contact-form-desc">Fill out the form and a member of our team will follow up with you within one business day. For immediate assistance, call us directly at (717) 521-1616. All work is performed in compliance with <a href="https://www.osha.gov/construction" target="_blank" rel="noopener noreferrer" style="color:#003d82;text-decoration:underline;">OSHA construction and electrical safety standards</a>. Our electricians hold the municipal licensing and Master Electrician credentials required under <a href="https://www.dli.pa.gov/Individuals/Labor-Management-Relations/llc/electrical" target="_blank" rel="noopener noreferrer" style="color:#003d82;text-decoration:underline;">Pennsylvania's local licensing requirements</a> and equivalent regulations in MD and NJ.</p>
 
         <!-- Success message -->
-        <div class="contact-success" id="contact-page-success" style="display:none;">
+        <div class="contact-success" role="status" aria-live="polite" id="contact-page-success" style="display:none;">
           <div class="contact-success-icon">&#10003;</div>
           <h3 class="contact-success-title">Message Sent!</h3>
           <p class="contact-success-text">Thanks for reaching out. We'll be in touch within one business day.</p>
@@ -819,29 +822,29 @@
 
           <div class="contact-row">
             <div class="contact-field">
-              <input type="text" class="contact-input" name="firstName" placeholder="FIRST NAME *" required />
+              <input type="text" class="contact-input" name="firstName" placeholder="FIRST NAME *" required / aria-label="First name">
             </div>
             <div class="contact-field">
-              <input type="text" class="contact-input" name="lastName" placeholder="LAST NAME *" required />
-            </div>
-          </div>
-
-          <div class="contact-row">
-            <div class="contact-field">
-              <input type="email" class="contact-input" name="email" placeholder="EMAIL ADDRESS *" required />
-            </div>
-            <div class="contact-field">
-              <input type="tel" class="contact-input" name="phone" placeholder="PHONE NUMBER *" required maxlength="10" />
+              <input type="text" class="contact-input" name="lastName" placeholder="LAST NAME *" required / aria-label="Last name">
             </div>
           </div>
 
           <div class="contact-row">
             <div class="contact-field">
-              <input type="text" class="contact-input" name="company" placeholder="COMPANY NAME" />
+              <input type="email" class="contact-input" name="email" placeholder="EMAIL ADDRESS *" required / aria-label="Email address">
+            </div>
+            <div class="contact-field">
+              <input type="tel" class="contact-input" name="phone" placeholder="PHONE NUMBER *" required maxlength="10" / aria-label="Phone number">
+            </div>
+          </div>
+
+          <div class="contact-row">
+            <div class="contact-field">
+              <input type="text" class="contact-input" name="company" placeholder="COMPANY NAME" / aria-label="Company name">
             </div>
             <div class="contact-field">
               <div class="contact-select-wrap">
-                <select class="contact-input contact-select" name="inquiryType" required>
+                <select class="contact-input contact-select" name="inquiryType" required aria-label="Inquiry type">
                   <option value="" disabled selected>INQUIRY TYPE *</option>
                   <option value="commercial-electrical">Commercial Electrical Services</option>
                   <option value="commercial-hvac-plumbing">Commercial HVAC &amp; Plumbing Services</option>
@@ -858,7 +861,7 @@
 
           <div class="contact-row contact-row--full">
             <div class="contact-field">
-              <textarea class="contact-input contact-textarea" name="message" placeholder="TELL US ABOUT YOUR PROJECT *" required></textarea>
+              <textarea class="contact-input contact-textarea" name="message" placeholder="TELL US ABOUT YOUR PROJECT *" required aria-label="Tell us about your project"></textarea>
             </div>
           </div>
 
@@ -935,6 +938,8 @@
   <!-- ═══════════════════════════════════════════════
        FOOTER
   ═══════════════════════════════════════════════ -->
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
 
@@ -1015,43 +1020,7 @@
     })();
 
     /* ── Contact form: disable submit until required fields filled ── */
-    (function() {
-      var form = document.getElementById('contact-page-form');
-      var btn  = document.getElementById('contact-page-submit');
-      if (!form || !btn) return;
-
-      var required = form.querySelectorAll('[required]');
-
-      function validate() {
-        var allFilled = true;
-        required.forEach(function(field) {
-          var val = field.value.trim();
-          if (!val) { allFilled = false; return; }
-          if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { allFilled = false; }
-          if (field.type === 'tel' && val.replace(/\D/g,'').length !== 10) { allFilled = false; }
-        });
-        btn.disabled = !allFilled;
-      }
-
-      required.forEach(function(f) {
-        f.addEventListener('input', validate);
-        f.addEventListener('change', validate);
-      });
-      validate();
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var data = new FormData(form);
-        fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(data).toString()
-        }).then(function() {
-          form.style.display = 'none';
-          document.getElementById('contact-page-success').style.display = 'block';
-        }).catch(function() {
-          form.submit();
-        });
-      });
-    })();
+    
   </script>
 <script>
   // Preselect the inquiry type when arriving from a service or careers page

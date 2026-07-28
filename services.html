@@ -835,6 +835,7 @@
 </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <!-- ═══════════════════════════════════════════════
        NAVIGATION
@@ -927,6 +928,8 @@
       </ul>
     </div>
   </header>
+
+  <main id="main-content">
 
   <!-- ═══════════════════════════════════════════════
        HERO
@@ -1399,7 +1402,7 @@
         <div class="contact-form-wrap">
 
           <!-- Success message -->
-          <div class="contact-success" id="svcs-contact-success" style="display:none;">
+          <div class="contact-success" role="status" aria-live="polite" id="svcs-contact-success" style="display:none;">
             <div class="contact-success-icon">&#10003;</div>
             <h3 class="contact-success-title">Message Sent!</h3>
             <p class="contact-success-text">Thanks for reaching out. We'll be in touch shortly.</p>
@@ -1419,26 +1422,26 @@
 
             <div class="contact-row">
               <div class="contact-field">
-                <input type="text" class="contact-input" name="firstName" placeholder="FIRST NAME *" required />
+                <input type="text" class="contact-input" name="firstName" placeholder="FIRST NAME *" required / aria-label="First name">
               </div>
               <div class="contact-field">
-                <input type="text" class="contact-input" name="lastName" placeholder="LAST NAME *" required />
+                <input type="text" class="contact-input" name="lastName" placeholder="LAST NAME *" required / aria-label="Last name">
               </div>
             </div>
 
             <div class="contact-row">
               <div class="contact-field">
-                <input type="email" class="contact-input" name="email" placeholder="EMAIL ADDRESS *" required />
+                <input type="email" class="contact-input" name="email" placeholder="EMAIL ADDRESS *" required / aria-label="Email address">
               </div>
               <div class="contact-field">
-                <input type="tel" class="contact-input" name="phone" placeholder="PHONE NUMBER *" required maxlength="10" />
+                <input type="tel" class="contact-input" name="phone" placeholder="PHONE NUMBER *" required maxlength="10" / aria-label="Phone number">
               </div>
             </div>
 
             <div class="contact-row contact-row--full">
               <div class="contact-field">
                 <div class="contact-select-wrap">
-                  <select class="contact-input contact-select" name="service" required>
+                  <select class="contact-input contact-select" name="service" required aria-label="What service do you need?">
                     <option value="" disabled selected>WHAT SERVICE DO YOU NEED? *</option>
                     <option value="commercial-electrical">Commercial Electrical Services</option>
                     <option value="commercial-hvac">Commercial HVAC &amp; Plumbing Services</option>
@@ -1454,7 +1457,7 @@
 
             <div class="contact-row contact-row--full">
               <div class="contact-field">
-                <textarea class="contact-input contact-textarea" name="message" placeholder="TELL US ABOUT YOUR PROJECT *" required></textarea>
+                <textarea class="contact-input contact-textarea" name="message" placeholder="TELL US ABOUT YOUR PROJECT *" required aria-label="Tell us about your project"></textarea>
               </div>
             </div>
 
@@ -1472,6 +1475,8 @@
   <!-- ═══════════════════════════════════════════════
        FOOTER
   ═══════════════════════════════════════════════ -->
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
 
@@ -1569,68 +1574,7 @@
       el.textContent = u + '@' + d;
     })();
 
-    // Contact form: enable submit when all fields filled
-    (function() {
-      var form   = document.getElementById('svcs-contact-form');
-      var submit = document.getElementById('svcs-submit');
-      if (!form || !submit) return;
 
-      var fields = form.querySelectorAll('input[required], select[required], textarea[required]');
-
-      function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-      function isValidPhone(v) { return v.replace(/\D/g,'').length === 10; }
-
-      function checkForm() {
-        var ok = true;
-        fields.forEach(function(el) {
-          var v = el.value.trim();
-          if (!v) { ok = false; return; }
-          if (el.type === 'email' && !isValidEmail(v)) { ok = false; return; }
-          if (el.type === 'tel'   && !isValidPhone(v)) { ok = false; return; }
-        });
-        submit.disabled = !ok;
-      }
-
-      var phone = form.querySelector('input[type="tel"]');
-      if (phone) {
-        phone.addEventListener('input', function() {
-          this.value = this.value.replace(/\D/g,'').slice(0,10);
-          checkForm();
-        });
-      }
-
-      fields.forEach(function(el) {
-        el.addEventListener('input',  checkForm);
-        el.addEventListener('change', checkForm);
-      });
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        submit.disabled = true;
-        submit.textContent = 'SENDING...';
-        fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(new FormData(form)).toString()
-        }).then(function(res) {
-          if (res.ok) {
-            form.style.display = 'none';
-            var success = document.getElementById('svcs-contact-success');
-            if (success) success.style.display = 'flex';
-          } else {
-            submit.disabled = false;
-            submit.textContent = 'SEND MESSAGE';
-            alert('Something went wrong. Please try again.');
-          }
-        }).catch(function() {
-          submit.disabled = false;
-          submit.textContent = 'SEND MESSAGE';
-          alert('Something went wrong. Please try again.');
-        });
-      });
-
-      checkForm();
-    })();
 
     // FAQ Accordion
     (function() {
