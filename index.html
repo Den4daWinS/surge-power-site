@@ -17,8 +17,6 @@
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
   <meta name="theme-color" content="#1F272E" />
 
-  <!-- ─── Hero Preload (video-based hero; no static hero-bg image on homepage) ─── -->
-  <link rel="preload" as="video" href="assets/videos/hero-bg.mp4" type="video/mp4" />
 
   <!-- ─── Open Graph ─── -->
   <meta property="og:type" content="website" />
@@ -225,7 +223,7 @@
     <!-- Video Background -->
     <div class="hero-video-fallback"></div>
     <video
-      class="hero-video"
+      class="hero-video" poster="assets/images/hero-poster.jpg"
       id="hero-video"
       autoplay
       muted

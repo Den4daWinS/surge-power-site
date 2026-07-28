@@ -1911,3 +1911,9 @@ ul {
   }
   .logo-scroll-track { animation: none !important; }
 }
+
+/* Fixed-column inline grids collapse gracefully on small screens */
+@media (max-width: 900px) {
+  .m-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .m-grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; }
+}
