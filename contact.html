@@ -1051,5 +1051,22 @@
       });
     })();
   </script>
+<script>
+  // Preselect the inquiry type when arriving from a service or careers page
+  // (links there carry ?service=<option value>). Falls back silently.
+  (function () {
+    var slug = new URLSearchParams(window.location.search).get('service');
+    if (!slug) return;
+    var sel = document.querySelector('select[name="inquiryType"]');
+    if (!sel) return;
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === slug) {
+        sel.value = slug;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        break;
+      }
+    }
+  })();
+  </script>
 </body>
 </html>
